@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <style>
+    html, body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; background: #1e1f22; color: #ddd; }
+    #click-btn { font-size: 14px; padding: 8px 14px; cursor: pointer; border-radius: 6px;
+                 border: 1px solid #4a4d51; background: #2b2d30; color: #e6e6e6; }
+    #click-btn:hover { border-color: #4f9cff; }
+    #message { margin-top: 16px; min-height: 20px; font-size: 14px; color: #4f9cff; }
+  </style>
+</head>
+<body>
+  <button id="click-btn">Click me</button>
+  <div id="message"></div>
+
+  <script>
+    // The browser pipe to the IDE is installed by the Kotlin panel as window.__DemoTools.send(json).
+    function send(type) {
+      const pipe = window.__DemoTools;
+      if (pipe && pipe.send) pipe.send(JSON.stringify({ type: type }));
+    }
+
+    // Kotlin pushes the formatted message back here after handling the click (Kotlin -> JS).
+    window.__showMessage = function (text) {
+      document.getElementById('message').textContent = text;
+    };
+
+    // Button click -> pipe message to Kotlin (JS -> Kotlin).
+    document.getElementById('click-btn').addEventListener('click', function () {
+      send('buttonClicked');
+    });
+  </script>
+</body>
+</html>

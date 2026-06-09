@@ -1,0 +1,16 @@
+# Gradle / build
+.gradle/
+build/
+*/build/
+buildSrc/build/
+
+# IntelliJ Platform Gradle plugin sandbox + downloaded IDEs
+.intellijPlatform/
+
+# IDE Starter + Driver test artifacts
+out/
+allure-results/
+
+# IDE project files
+.idea/
+*.iml

@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>dev.example.jcefe2e</id>
+    <name>JCEF + Playwright E2E Example</name>
+    <vendor>example</vendor>
+    <description><![CDATA[
+        Minimal example demonstrating the JCEF + Playwright end-to-end testing pattern. A tool window
+        hosts a JCEF page with a button; clicking it round-trips through the browser pipe to Kotlin and
+        back to display a message. The e2e tests drive it two ways: at the browser-pipe boundary and
+        with real Playwright gestures over the Chromium DevTools Protocol.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Demo" anchor="right" factoryClass="dev.example.jcefe2e.DemoToolWindowFactory"/>
+    </extensions>
+</idea-plugin>
