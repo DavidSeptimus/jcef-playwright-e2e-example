@@ -132,9 +132,6 @@ The harness deltas that make the split task real (all in `DemoE2ETestBase` / the
    backend. The Gradle task also sets `pluginInstallationTarget = BOTH`.
 3. **`REMOTE_DEV_RUN=true` + `splitMode = true`** on the `e2eTestSplitMode` task switch Starter into
    remote-dev provisioning (the env var is read via `System.getenv`, so it must be an env var).
-4. **Expect platform noise.** The bundled Kubernetes plugin fires an unresolved-RemoteApi error on
-   the client even when disabled on both contexts; the `CIServer` override filters that one message
-   so it can't fail the run.
 
 `@Remote` targeting: the Driver defaults to the **frontend** in split mode, which is exactly where
 this plugin's `DemoBridge` lives — so the stub needs no explicit `RdTarget`. It does need the

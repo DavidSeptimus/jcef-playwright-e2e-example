@@ -75,13 +75,6 @@ abstract class DemoE2ETestBase {
             bindSingleton<CIServer>(overrides = true) {
                 object : CIServer by NoCIServer {
                     override fun reportTestFailure(testName: String, message: String, details: String, linkToLogs: String?) {
-                        // In real split runs the bundled Kubernetes plugin's frontend half fires an
-                        // unresolved-RemoteApi error before the disable (below) fully bites.
-                        // Platform/bundled-plugin noise, unrelated to this plugin.
-                        if (message.contains("com.intellij.kubernetes") || details.contains("com.intellij.kubernetes")) {
-                            println("Ignoring known bundled-Kubernetes split-mode noise: $message")
-                            return
-                        }
                         fail<Unit>("$testName failed inside the IDE under test: $message\n$details")
                     }
                 }
