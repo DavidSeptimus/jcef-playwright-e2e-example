@@ -3,6 +3,7 @@ import org.gradle.api.attributes.Category
 import org.gradle.api.attributes.LibraryElements
 import org.gradle.api.attributes.Usage
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
+import org.jetbrains.intellij.platform.gradle.tasks.aware.SplitModeAware
 
 plugins {
     id("java")
@@ -25,6 +26,9 @@ repositories {
 dependencies {
     intellijPlatform {
         intellijIdea(providers.gradleProperty("platformVersion"))
+        // Content module: slots frontend's jar into the plugin distribution as
+        // dev.example.jcefe2e.frontend.jar, matching plugin.xml's <content><module> declaration.
+        pluginModule(implementation(project(":frontend")))
     }
 }
 
@@ -87,15 +91,32 @@ dependencies {
 
 intellijPlatformTesting {
     testIdeUi {
-        // Monolith e2e run: ./gradlew e2eTest  (this example focuses on monolith).
+        val fixtureDir = layout.projectDirectory.dir("e2e-tests/testData/demo-fixture").asFile.absolutePath
+
+        // Monolith e2e run: ./gradlew e2eTest
         // testIdeUi auto-wires `path.to.build.plugin` (the built plugin) + prepareSandbox; we point
         // discovery/classpath at :e2e-tests and hand the harness the fixture path.
         register("e2eTest") {
-            val fixtureDir = layout.projectDirectory.dir("e2e-tests/testData/demo-fixture").asFile.absolutePath
             task {
                 testClassesDirs = e2eTestClassesDirs
                 classpath = e2eTestClassesDirs + e2eTestRuntimeClasspath
                 systemProperty("e2e.fixture.dir", fixtureDir)
+                useJUnitPlatform()
+            }
+        }
+
+        // Split-mode (frontend/backend) e2e run: ./gradlew e2eTestSplitMode  (same tests, in split).
+        // `splitMode`/`pluginInstallationTarget` prepare split sandboxes; the REMOTE_DEV_RUN env var
+        // (read by Starter's StarterConfigurationStorage via System.getenv) flips the Starter DI to
+        // RemDevTestContainer so Starter.newContext returns an IDERemDevTestContext.
+        register("e2eTestSplitMode") {
+            splitMode = true
+            pluginInstallationTarget = SplitModeAware.PluginInstallationTarget.BOTH
+            task {
+                testClassesDirs = e2eTestClassesDirs
+                classpath = e2eTestClassesDirs + e2eTestRuntimeClasspath
+                systemProperty("e2e.fixture.dir", fixtureDir)
+                environment("REMOTE_DEV_RUN", "true")
                 useJUnitPlatform()
             }
         }

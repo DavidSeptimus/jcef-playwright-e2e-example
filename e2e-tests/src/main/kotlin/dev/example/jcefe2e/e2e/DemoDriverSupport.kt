@@ -5,14 +5,18 @@ import com.intellij.driver.client.Remote
 import com.intellij.driver.client.service
 import com.intellij.driver.sdk.openToolWindow
 
-/** Driver @Remote stub + helpers for the Demo tool window (monolith). */
+/** Driver @Remote stub + helpers for the Demo tool window (monolith + split). */
 
 /**
  * Binds to the plugin's [DemoBridge] application-service test seam. The panel registers itself with
- * the bridge on creation, so these methods reach the live JCEF panel's @TestOnly hooks. The class is
- * in the (single, root) plugin module, so it resolves under the bare plugin id.
+ * the bridge on creation, so these methods reach the live JCEF panel's @TestOnly hooks. The class
+ * lives in the `frontend` content module, so the plugin id uses the content-module form
+ * `"<pluginId>/<moduleName>"` (a bare plugin id only resolves classes in the main module). No
+ * explicit RdTarget needed: the Driver defaults to the frontend in split mode, which is exactly
+ * where this frontend-module service (and its JCEF panel) lives - and the single process in
+ * monolith.
  */
-@Remote("dev.example.jcefe2e.DemoBridge", plugin = "dev.example.jcefe2e")
+@Remote("dev.example.jcefe2e.DemoBridge", plugin = "dev.example.jcefe2e/dev.example.jcefe2e.frontend")
 internal interface DemoBridgeRef {
     fun hasRenderedForTest(): Boolean
     fun clickCountForTest(): Int

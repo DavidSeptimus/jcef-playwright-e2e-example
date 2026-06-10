@@ -1,0 +1,18 @@
+<!-- Frontend content module descriptor. The platform resolves the <content><module> declaration in
+     plugin.xml to this file (at the root of dev.example.jcefe2e.frontend.jar; the jar name comes
+     from rootProject.name + the subproject name).
+
+     The <dependencies> block is the LOADING marker, not a compile-time detail: depending on
+     intellij.platform.frontend makes this module load in a monolith IDE and in the JetBrains Client,
+     but on a split-mode backend the tool window registered here belongs to the client - so the JCEF
+     browser (and the CDP debug port Playwright attaches to) lives in the FRONTEND process under
+     split. Module descriptors inline their <extensions>; they cannot xi:include. -->
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Demo" anchor="right" factoryClass="dev.example.jcefe2e.DemoToolWindowFactory"/>
+    </extensions>
+</idea-plugin>

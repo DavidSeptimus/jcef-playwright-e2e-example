@@ -34,8 +34,10 @@ dependencyResolutionManagement {
     }
 }
 
-// Single-module plugin: a tool window hosting a JCEF page (everything lives in the root module).
+// Plugin modules: the root module holds only plugin.xml; all functionality lives in the "frontend"
+// content module (tool window + JCEF panel + bridge), the idiomatic V2 split-mode placement.
 // Isolated harness for the IDE Starter + Driver e2e tests (JUnit5/Starter/Playwright deps kept off
 // the main JUnit classpath). The testIdeUi task that runs it is registered in the ROOT build - the
 // IntelliJ Platform Gradle plugin rejects testIdeUi in `.module` projects.
+include("frontend")
 include("e2e-tests")
